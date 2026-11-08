@@ -8,3 +8,5 @@
 @media(max-width:820px){.site-bar{height:60px;padding:0 14px}.site-bar .brand{font-size:18px}}
 
 .tag-editor{margin:20px 0}.tag-list{display:flex;flex-wrap:wrap;gap:8px}.tag-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;background:#f2e9e0;border-radius:16px;color:#946e52;font-size:12px;max-width:100%;overflow-wrap:anywhere}.tag-chip button{border:0;background:none;color:inherit;padding:0 2px;font-size:16px;line-height:1;cursor:pointer}.tag-input-row{display:flex;align-items:center;gap:8px}.tag-input-row #tag-input{font-size:14px;font-weight:400;flex:1;min-width:0}.tag-input-row .quiet{white-space:nowrap}.note-tags{margin:12px 0}.tag-chip:has(button:focus-visible){outline:2px solid var(--accent)}
+
+.publisher-embed,.publisher-embed body{background:transparent!important}.publisher-embed .site-bar,.publisher-embed .feed-page,.publisher-embed .publish-fab{display:none!important}
