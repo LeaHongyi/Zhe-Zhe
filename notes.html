@@ -1,29 +1,14 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>新笔记 · 哲与哲</title>
-<link rel="stylesheet" href="assets/notes.css">
-<script src="assets/notes.js" defer></script>
-</head>
-<body>
-<header class="header"><a href="./" class="back">← 返回图文归档</a><a class="brand" href="./">ZHE &amp; ZHE</a><span>生活，继续记录。</span></header>
-<main>
-<section class="intro"><div><p class="eyebrow">LIFE CONTINUES</p><h1>把今天，也留下来。</h1><p class="muted">新的日常，新的回忆。这里收下归档之后的故事。</p></div><button class="primary" id="write">＋ 写笔记</button></section>
-<section class="composer" id="composer" hidden aria-labelledby="editor-title">
-<div class="section-heading"><h2 id="editor-title">写一篇新笔记</h2><button class="text-button" id="close-editor" type="button">收起</button></div>
-<p class="muted">草稿只保存在这台设备。确认发布时将前往 GitHub，用 LeaHongyi 账号登录并点击「Create」或「Submit new issue」，笔记才会公开。可在那一步拖入照片。</p>
-<form id="note-form">
-<label for="title">标题</label><input id="title" name="title" placeholder="今天有什么值得记住？" maxlength="120" required>
-<label for="body">正文</label><textarea id="body" name="body" rows="10" maxlength="5000" placeholder="写下这一刻的心情……" required></textarea>
-<div class="editor-meta"><span id="draft-status" role="status"></span><span id="counter">0 / 5000</span></div>
-<details class="image-help"><summary>如何添加照片？</summary><p>在 GitHub 最终发布页面，把照片拖入正文框，等待上传完成后再发布。网站会显示这些照片。也可以在正文中填写：<code>![照片描述](https://图片地址)</code>。</p></details>
-<div class="actions"><button class="secondary" id="preview" type="button">预览</button><button class="text-button" id="clear" type="button">清空草稿</button><button class="primary" type="submit">前往 GitHub 发布 ↗</button></div>
-<p id="publish-status" role="status" class="muted"></p>
-</form>
-<article class="note preview" id="preview-panel" hidden><p class="eyebrow">预览 · 尚未发布</p><h2 id="preview-title"></h2><div class="note-body" id="preview-body"></div></article>
-</section>
-<section aria-labelledby="feed-title"><div class="section-heading"><div><p class="eyebrow">OUR NEW CHAPTER</p><h2 id="feed-title">最近的笔记</h2></div><button class="secondary" id="refresh">刷新笔记</button></div><p class="muted">这里展示 LeaHongyi 发布的公开笔记。</p><p role="status" id="feed-status">正在读取笔记……</p><div id="feed"></div><button class="secondary more" id="more" hidden>加载更多</button></section>
-<footer>往日有迹，来日可期。<a href="./">回到 2013–2022 图文归档 ↗</a></footer>
-</main>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbfaf7"><title>笔记 · 哲与哲</title><link rel="stylesheet" href="assets/notes.css"><script type="module" src="assets/notes.js"></script></head><body>
+<header class="site-bar"><a href="./" class="back">← 归档</a><a class="brand" href="./">ZHE &amp; ZHE</a><button id="account" class="quiet">连接账号</button></header>
+<main class="feed-page"><div class="feed-heading"><div><p class="eyebrow">LIFE CONTINUES</p><h1>新的日常</h1></div><button class="quiet" id="refresh">刷新</button></div><p class="subtle">把喜欢的瞬间，慢慢记下来。</p><p id="feed-status" class="subtle" role="status">正在读取……</p><div id="feed" class="feed-grid"></div><button id="more" class="quiet" hidden>加载更多</button><a class="archive-link" href="./">看看从前的故事 ↗</a></main>
+<button id="write" class="publish-fab" aria-label="发布新笔记">＋</button>
+<dialog id="source-sheet" class="sheet"><div class="sheet-handle"></div><h2>记录这一刻</h2><button id="choose-album" class="sheet-option"><span class="option-icon">▧</span><span>从相册选照片<small>最多 9 张，第一张作为封面</small></span><span>›</span></button><button id="choose-camera" class="sheet-option"><span class="option-icon">◎</span><span>拍一张照片<small>打开相机，留住此刻</small></span><span>›</span></button><button id="choose-text" class="sheet-option"><span class="option-icon">T</span><span>写文字<small>不加照片，也值得记录</small></span><span>›</span></button><button id="restore-draft" class="sheet-option" hidden><span class="option-icon">▤</span><span>继续上次的草稿<small id="draft-summary"></small></span><span>›</span></button><button id="cancel-source" class="sheet-cancel">取消</button></dialog>
+<input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif" multiple hidden><input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+<dialog id="studio" class="studio" aria-labelledby="studio-title"><header class="studio-bar"><button id="studio-back" class="icon-button" aria-label="返回">‹</button><h2 id="studio-title">照片预览</h2><button id="save-draft" class="quiet">存草稿</button></header>
+<section id="photo-step" class="photo-step"><div id="large-preview" class="large-preview"></div><div class="photo-controls"><button id="previous-photo" class="quiet" aria-label="上一张">←</button><span id="photo-position"></span><button id="next-photo" class="quiet" aria-label="下一张">→</button><button id="make-cover" class="quiet">设为封面</button><button id="remove-photo" class="quiet">移除</button></div><div id="preview-strip" class="photo-strip"></div><p class="subtle centered">第一张是封面 · 选择缩略图查看照片</p><footer class="studio-bottom"><span id="photo-count" class="subtle"></span><button id="next-step" class="primary">下一步 →</button></footer></section>
+<form id="note-form" class="edit-step" hidden><div id="edit-strip" class="photo-strip"></div><input id="title" name="title" maxlength="120" placeholder="添加标题" aria-label="标题"><textarea id="body" name="body" maxlength="5000" placeholder="分享这一刻的想法……" aria-label="正文"></textarea><div class="editor-meta"><span id="draft-status" role="status"></span><span id="counter">0 / 5000</span></div><div class="visibility"><span>◎ 公开可见</span><span class="subtle">发布后，所有人都能看到</span></div><p id="publish-status" role="status" class="status"></p><footer class="studio-bottom"><button id="preview-note" class="quiet" type="button">预览笔记</button><button id="publish" class="primary" type="submit">发布笔记</button></footer></form></dialog>
+<dialog id="note-preview" class="preview-dialog"><button id="close-preview" class="quiet">关闭预览 ×</button><article id="preview-content"></article></dialog>
+<dialog id="connection" class="connection"><div class="connection-heading"><h2>连接发布账号</h2><button id="close-connection" class="quiet" aria-label="关闭账号设置">×</button></div><p class="subtle">仅首次配置发布权限。连接后，在这里选照片、写文字，直接发布。</p><div id="connected-panel" hidden><p>已连接 <strong>LeaHongyi</strong></p><button id="disconnect" class="quiet">断开连接</button></div><form id="connect-form"><details id="connection-help"><summary>首次连接怎么做？</summary><ol><li><a id="create-token" href="https://github.com/settings/personal-access-tokens/new?name=Zhe-Zhe%20Notes&description=Publish%20notes%20to%20Zhe-Zhe&target_name=LeaHongyi&contents=write" target="_blank" rel="noopener noreferrer">在 GitHub 创建发布凭证 ↗</a>，用 LeaHongyi 登录。</li><li>Repository access 选择 <strong>Only select repositories → Zhe-Zhe</strong>。Repository permissions 只需 <strong>Contents → Read and write</strong>，设置到期时间后生成。</li><li>复制生成的凭证，粘贴到下方即可。无需把凭证发给别人。</li></ol></details><label for="access-key">发布凭证</label><input id="access-key" type="password" autocomplete="off" spellcheck="false" placeholder="粘贴 GitHub 发布凭证" required><label class="remember"><input id="remember" type="checkbox">在这台设备上保持连接</label><p class="subtle tiny">凭证只发往 GitHub。默认仅保留在当前会话；勾选后会保存在此浏览器，请仅在自己的设备使用。可随时断开，凭证到期后需重新连接。</p><button id="connect" class="primary" type="submit">连接</button></form><p id="connection-status" role="status" class="status"></p></dialog>
+<dialog id="leave-confirm" class="small-dialog"><h2>先存成草稿？</h2><p class="subtle">照片和文字会保留在这台设备，下次可以接着写。</p><button id="leave-save" class="primary">存草稿并退出</button><button id="leave-discard" class="quiet">放弃本次编辑</button><button id="leave-cancel" class="quiet">继续编辑</button></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
 </body></html>
