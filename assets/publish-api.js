@@ -66,7 +66,7 @@ export async function publishNote({token, draft, onProgress = () => {}, fetcher 
     tree.push({path,mode:'100644',type:'blob',sha:blob.sha});
     photos.push({path,width:photo.width,height:photo.height});
   }
-  const note = {id:draft.id,title:draft.title.trim().slice(0,120),body:draft.body.trim().slice(0,5000),photos,createdAt:new Date().toISOString()};
+  const note = {id:draft.id,title:draft.title.trim().slice(0,120),body:draft.body.trim().slice(0,5000),tags:normalizeTags(draft.tags),photos,createdAt:new Date().toISOString()};
   data.notes.unshift(note);
   tree.push({path:'notes-data.json',mode:'100644',type:'blob',content:JSON.stringify(data,null,2)+'\n'});
   onProgress('正在保存笔记……');
@@ -83,4 +83,9 @@ export async function publishNote({token, draft, onProgress = () => {}, fetcher 
     throw error;
   }
   return {note,commit:next.sha};
+}
+
+export function normalizeTags(values = []) {
+  if (!Array.isArray(values)) return [];
+  return [...new Set(values.filter(value => typeof value === 'string').map(value => value.trim().replace(/^[#＃]+/, '').replace(/\s+/g, ' ').slice(0,20)).filter(Boolean))].slice(0,10);
 }
