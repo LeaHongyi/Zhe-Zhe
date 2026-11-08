@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>新笔记 · 哲与哲</title>
+<link rel="stylesheet" href="assets/notes.css">
+<script src="assets/notes.js" defer></script>
+</head>
+<body>
+<header class="header"><a href="./" class="back">← 返回图文归档</a><a class="brand" href="./">ZHE &amp; ZHE</a><span>生活，继续记录。</span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">LIFE CONTINUES</p><h1>把今天，也留下来。</h1><p class="muted">新的日常，新的回忆。这里收下归档之后的故事。</p></div><button class="primary" id="write">＋ 写笔记</button></section>
+<section class="composer" id="composer" hidden aria-labelledby="editor-title">
+<div class="section-heading"><h2 id="editor-title">写一篇新笔记</h2><button class="text-button" id="close-editor" type="button">收起</button></div>
+<p class="muted">草稿只保存在这台设备。确认发布时将前往 GitHub，用 LeaHongyi 账号登录并点击「Create」或「Submit new issue」，笔记才会公开。可在那一步拖入照片。</p>
+<form id="note-form">
+<label for="title">标题</label><input id="title" name="title" placeholder="今天有什么值得记住？" maxlength="120" required>
+<label for="body">正文</label><textarea id="body" name="body" rows="10" maxlength="5000" placeholder="写下这一刻的心情……" required></textarea>
+<div class="editor-meta"><span id="draft-status" role="status"></span><span id="counter">0 / 5000</span></div>
+<details class="image-help"><summary>如何添加照片？</summary><p>在 GitHub 最终发布页面，把照片拖入正文框，等待上传完成后再发布。网站会显示这些照片。也可以在正文中填写：<code>![照片描述](https://图片地址)</code>。</p></details>
+<div class="actions"><button class="secondary" id="preview" type="button">预览</button><button class="text-button" id="clear" type="button">清空草稿</button><button class="primary" type="submit">前往 GitHub 发布 ↗</button></div>
+<p id="publish-status" role="status" class="muted"></p>
+</form>
+<article class="note preview" id="preview-panel" hidden><p class="eyebrow">预览 · 尚未发布</p><h2 id="preview-title"></h2><div class="note-body" id="preview-body"></div></article>
+</section>
+<section aria-labelledby="feed-title"><div class="section-heading"><div><p class="eyebrow">OUR NEW CHAPTER</p><h2 id="feed-title">最近的笔记</h2></div><button class="secondary" id="refresh">刷新笔记</button></div><p class="muted">这里展示 LeaHongyi 发布的公开笔记。</p><p role="status" id="feed-status">正在读取笔记……</p><div id="feed"></div><button class="secondary more" id="more" hidden>加载更多</button></section>
+<footer>往日有迹，来日可期。<a href="./">回到 2013–2022 图文归档 ↗</a></footer>
+</main>
+</body></html>
