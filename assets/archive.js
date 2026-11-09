@@ -1,4 +1,16 @@
 
+    const cloudBase = window.ZHE_MEDIA?.base || '';
+    const mediaURL = path => cloudBase && location.protocol !== 'file:' && /^(?:images|thumbs|previews|thumbs-320)\/\d+\/\d+\.(?:jpg|webp)$/.test(path) ? cloudBase + path : path;
+    const localMediaURL = url => cloudBase && url.startsWith(cloudBase) ? url.slice(cloudBase.length).replace(/^thumbs-320\//, 'thumbs/') : url;
+    // Use local files only if the cloud image fails; never embed credentials or expiring signatures.
+    document.querySelectorAll('.hero-bg, .collection-bg').forEach(layer => {
+      const url = layer.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/)?.[1];
+      if (!url?.startsWith(cloudBase) || !cloudBase) return;
+      const probe = new Image();
+      probe.onerror = () => { layer.style.backgroundImage = "url('" + localMediaURL(url) + "')"; };
+      probe.src = url;
+    });
+
     const lightbox = document.querySelector(".lightbox");
     const lightboxImage = lightbox.querySelector("img");
     const lightboxIndex = lightbox.querySelector(".lightbox-index");
@@ -16,7 +28,7 @@
         visibility.observe(container);
       } else { container.dataset.onScreen = '1'; }
       let activeLayer = 0;
-      const imageSrc = (image) => typeof image === "string" ? image : image.src;
+      const imageSrc = (image) => mediaURL(typeof image === "string" ? image : image.src);
       const imagePost = (image) => typeof image === "string" ? "" : image.post;
       let currentImageSource = imageSrc(images[0]);
       window.setInterval(() => {
@@ -27,13 +39,14 @@
         const nextLayer = activeLayer === 0 ? 1 : 0;
         const preload = new Image();
         preload.onload = () => {
-          layers[nextLayer].style.backgroundImage = "url('" + nextSource + "')";
+          layers[nextLayer].style.backgroundImage = "url('" + preload.src + "')";
           layers[nextLayer].dataset.post = imagePost(next);
           layers[nextLayer].classList.add("active");
           layers[activeLayer].classList.remove("active");
           activeLayer = nextLayer;
           currentImageSource = nextSource;
         };
+        preload.onerror = () => { if (preload.dataset.fallbackUsed) return; preload.dataset.fallbackUsed = "1"; preload.src = localMediaURL(nextSource); };
         preload.src = nextSource;
       }, intervalMs);
     };
@@ -159,7 +172,20 @@
     let touchStartX = 0;
     const loadPhoto = (button) => {
       const image = button.querySelector("img");
-      if (!image.getAttribute("src")) image.src = button.dataset.thumb || button.dataset.src;
+      if (!image.getAttribute("src")) {
+        const thumb = button.dataset.thumb || button.dataset.src;
+        image.decoding = 'async';
+        image.onerror = () => {
+          if (image.dataset.fallbackUsed) return;
+          image.dataset.fallbackUsed = '1'; image.removeAttribute('srcset'); image.src = thumb;
+        };
+        if (thumb.startsWith('thumbs/') && cloudBase && location.protocol !== 'file:') {
+          image.sizes = button.closest('.grid-one') ? '(max-width: 700px) calc(100vw - 60px), 420px' : button.closest('.grid-two, .grid-four') ? '(max-width: 700px) calc((100vw - 60px) / 2), 260px' : '(max-width: 700px) calc((100vw - 60px) / 3), 175px';
+          const widths = window.ZHE_MEDIA.widths[thumb.slice(7)] || [320, 520];
+          if (widths[0] < widths[1]) image.srcset = mediaURL(thumb.replace('thumbs/', 'thumbs-320/')) + ' ' + widths[0] + 'w, ' + mediaURL(thumb) + ' ' + widths[1] + 'w';
+          image.src = mediaURL(widths[0] < widths[1] ? thumb.replace('thumbs/', 'thumbs-320/') : thumb);
+        } else image.src = mediaURL(thumb);
+      }
       pendingButtons.delete(button);
       return image;
     };
@@ -280,9 +306,14 @@
       const buttons = activeLightboxButtons || galleries[currentGallery];
       const button = buttons[currentImage];
       const image = loadPhoto(button);
-      lightboxImage.src = button.dataset.src;
+      lightboxImage.onerror = () => {
+        if (lightboxImage.dataset.fallbackUsed) return;
+        lightboxImage.dataset.fallbackUsed = '1'; lightboxImage.src = button.dataset.src; lightboxDownload.href = button.dataset.src;
+      };
+      delete lightboxImage.dataset.fallbackUsed;
+      lightboxImage.src = mediaURL(button.dataset.src);
       lightboxIndex.textContent = (currentImage + 1) + "/" + buttons.length;
-      lightboxDownload.href = button.dataset.src;
+      lightboxDownload.href = mediaURL(button.dataset.src);
       lightboxDownload.download = button.dataset.filename;
       lightboxPrev.disabled = currentImage === 0;
       lightboxNext.disabled = currentImage === buttons.length - 1;
